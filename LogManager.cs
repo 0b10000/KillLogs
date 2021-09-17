@@ -15,22 +15,26 @@ namespace KillLogs
 
         public void ReportKill(DyingEventArgs ev, LogReason reason)
         {
+            _killString.Clear();
+            
             _killString.Append($"{DateTime.Now} ");
             _killString.Append($"{ev.Killer.Nickname} (`{ev.Killer.UserId}`) killed ");
             _killString.Append($"{ev.Target.Nickname} (`{ev.Target.UserId}`) ");
             _killString.Append(GetSpecialDecoration(reason));
             _killString.Append(GetMention(reason));
 
+            EnqueueKill(_killString.ToString());
         }
         
-        public void CleanupQueue()
+        public void SendQueue()
         {
-            
+            plugin.KillWebhook.SendMessage(_queue.ToString());
+            _queue.Clear();
         }
 
         private void EnqueueKill(string killString)
         {
-            if (killString.Length + _queue.Length >= 2000) CleanupQueue();
+            if (killString.Length + _queue.Length >= 2000) SendQueue();
             _queue.AppendLine(killString);
         }
 
