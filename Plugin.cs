@@ -27,8 +27,6 @@ namespace KillLogs
 
         private WebhookProvider WebhookProvider { get; set; }
         internal IWebhook KillWebhook { get; set; }
-        
-        
 
         public override void OnEnabled()
         {
@@ -52,6 +50,8 @@ namespace KillLogs
             
             ServerEvents.EndingRound += EventHandlers.OnEndingRound;
             
+            KillWebhook = null;
+            WebhookProvider = null;
             EventHandlers = null;
             LogManager = null;
 
