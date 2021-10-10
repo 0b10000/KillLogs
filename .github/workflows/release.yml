@@ -39,6 +39,8 @@ jobs:
 
     - name: Build
       run: msbuild KillLogs.sln -p:Configuration=release
+      env:
+        EXILED_REFERENCES: ${{ github.workspace }}\lib
         
     - name: Upload artifact and release
       uses: nanoufo/action-upload-artifacts-and-release-assets@main
