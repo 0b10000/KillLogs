@@ -19,10 +19,10 @@ namespace KillLogs
         public override string Name => "KillLogs";
         public override string Prefix => "KillLogs";
         public override Version Version { get; } = new(1, 0, 0);
-        public override Version RequiredExiledVersion { get; } = new(3,0,0);
-        
+        public override Version RequiredExiledVersion { get; } = new(3, 0, 0);
+
         public EventHandlers EventHandlers { get; private set; }
-        
+
         public LogManager LogManager { get; private set; }
 
         private WebhookProvider WebhookProvider { get; set; }
@@ -32,14 +32,15 @@ namespace KillLogs
         {
             EventHandlers = new EventHandlers(this);
             LogManager = new LogManager(this);
-            
+
             WebhookProvider = new WebhookProvider("0b10000.kill_logs");
             WebhookProvider.AllowedMention = AllowedMention.ROLES;
             KillWebhook = WebhookProvider.CreateWebhook(Config.DiscordWebhookUrl);
-            
+
             PlayerEvents.Dying += EventHandlers.OnDying;
-            
-            ServerEvents.EndingRound += EventHandlers.OnEndingRound;
+
+            ServerEvents.RoundEnded += EventHandlers.OnRoundEnded;
+            ServerEvents.RoundStarted += EventHandlers.OnRoundStarted;
 
             base.OnEnabled();
         }
@@ -47,9 +48,10 @@ namespace KillLogs
         public override void OnDisabled()
         {
             PlayerEvents.Dying -= EventHandlers.OnDying;
-            
-            ServerEvents.EndingRound += EventHandlers.OnEndingRound;
-            
+
+            ServerEvents.RoundEnded -= EventHandlers.OnRoundEnded;
+            ServerEvents.RoundStarted -= EventHandlers.OnRoundStarted;
+
             KillWebhook = null;
             WebhookProvider = null;
             EventHandlers = null;

@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
+using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 
 namespace KillLogs
@@ -8,42 +8,54 @@ namespace KillLogs
     public class LogManager
     {
         private readonly Plugin plugin;
-        public LogManager(Plugin plugin) => this.plugin = plugin;
+        private readonly StringBuilder _killString = new();
 
-        private StringBuilder _queue = new(2000);
-        private StringBuilder _killString = new();
+        private readonly StringBuilder _queue = new(2000);
 
-        public void ReportKill(DyingEventArgs ev, LogReason reason)
+        public LogManager(Plugin plugin)
         {
+            this.plugin = plugin;
+        }
+
+        public void ReportKill(DyingEventArgs ev, LogReason reason, bool sendImmediately = false)
+        {
+            Log.Debug("ReportKill", plugin.Config.Debug);
+
             _killString.Clear();
-            
+
             _killString.Append($"{DateTime.Now} ");
-            _killString.Append($"{ev.Killer.Nickname} (`{ev.Killer.UserId}`) killed ");
-            _killString.Append($"{ev.Target.Nickname} (`{ev.Target.UserId}`) ");
+            _killString.Append($"[{ev.Killer.Role}] {ev.Killer.Nickname} (`{ev.Killer.UserId}`) killed ");
+            _killString.Append($"[{ev.Target.Role}] {ev.Target.Nickname} (`{ev.Target.UserId}`) ");
             _killString.Append(GetSpecialDecoration(reason));
             _killString.Append(GetMention(reason));
 
-            EnqueueKill(_killString.ToString());
+            Log.Debug(_killString, plugin.Config.Debug);
+
+            EnqueueKill(_killString.ToString(), sendImmediately);
         }
-        
+
         public void SendQueue()
         {
-            plugin.KillWebhook.SendMessage(_queue.ToString());
+            plugin.KillWebhook.SendMessage(_queue.ToString())
+                .Queue(() => Log.Debug($"Sent queue of length {_queue.Length}", plugin.Config.Debug));
+
             _queue.Clear();
         }
 
-        private void EnqueueKill(string killString)
+        private void EnqueueKill(string killString, bool sendImmediately = false)
         {
-            if (killString.Length + _queue.Length >= 2000) SendQueue();
+            if (killString.Length + _queue.Length >= plugin.Config.QueueLength) SendQueue();
             _queue.AppendLine(killString);
+            if (sendImmediately) SendQueue();
+            Log.Debug("Enqueued kill", plugin.Config.Debug);
         }
 
         private string GetMention(LogReason reason)
         {
             if (reason == LogReason.CuffedKill && plugin.Config.PingCuffedHumanKills)
-                return $"<@{plugin.Config.RoleIdToPing}>";
+                return $"<@&{plugin.Config.RoleIdToPing}>";
             if (reason == LogReason.TeamKill && plugin.Config.PingTeamkills)
-                return $"<@{plugin.Config.RoleIdToPing}>";
+                return $"<@&{plugin.Config.RoleIdToPing}>";
             return null;
         }
 
@@ -59,6 +71,5 @@ namespace KillLogs
                     return null;
             }
         }
-        
     }
 }
