@@ -53,11 +53,15 @@ namespace KillLogs
 
         private string GetMention(LogReason reason)
         {
-            if (reason == LogReason.CuffedKill && plugin.Config.PingCuffedHumanKills)
-                return $"<@&{plugin.Config.RoleIdToPing}>";
-            if (reason == LogReason.TeamKill && plugin.Config.PingTeamkills)
-                return $"<@&{plugin.Config.RoleIdToPing}>";
-            return null;
+            switch (reason)
+            {
+                case LogReason.CuffedKill when plugin.Config.PingCuffedHumanKills:
+                    return $"<@&{plugin.Config.RoleIdToPing}>";
+                case LogReason.TeamKill when plugin.Config.PingTeamkills:
+                    return $"<@&{plugin.Config.RoleIdToPing}>";
+                default:
+                    return null;
+            }
         }
 
         private string GetSpecialDecoration(LogReason reason)
