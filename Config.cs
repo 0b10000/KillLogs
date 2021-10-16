@@ -22,7 +22,7 @@ namespace KillLogs
         public bool LogScpKills { get; set; } = false;
 
         [Description("Whether to log suicides or not.")]
-        public bool LogSuicides { get; set; } = false;
+        public bool LogSuicides { get; set; } = true;
 
         [Description("Whether or not to ping when a human kills another cuffed human.")]
         public bool PingCuffedHumanKills { get; set; } = true;
