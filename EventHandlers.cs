@@ -66,12 +66,10 @@ namespace KillLogs
             switch (ev.NextKnownTeam)
             {
                 case SpawnableTeamType.ChaosInsurgency:
-                    plugin.KillWebhook.SendMessage("**=== CI SPAWNED ===**")
-                        .Queue(() => Log.Debug("Sent CI spawn message", plugin.Config.Debug));
+                    plugin.LogManager.EnqueueText("**=== CI SPAWNED ===**", true);
                     break;
                 case SpawnableTeamType.NineTailedFox:
-                    plugin.KillWebhook.SendMessage("**=== NTF SPAWNED ===**")
-                        .Queue(() => Log.Debug("Sent NTF spawn message", plugin.Config.Debug));
+                    plugin.LogManager.EnqueueText("**=== NTF SPAWNED ===**",true);
                     break;
             }
         }

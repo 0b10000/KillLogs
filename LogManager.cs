@@ -32,7 +32,7 @@ namespace KillLogs
 
             Log.Debug(_killString, plugin.Config.Debug);
 
-            EnqueueKill(_killString.ToString(), sendImmediately);
+            EnqueueText(_killString.ToString(), sendImmediately);
         }
 
         public void SendQueue()
@@ -43,7 +43,7 @@ namespace KillLogs
             _queue.Clear();
         }
 
-        private void EnqueueKill(string killString, bool sendImmediately = false)
+        internal void EnqueueText(string killString, bool sendImmediately = false)
         {
             if (killString.Length + _queue.Length >= plugin.Config.QueueLength) SendQueue();
             _queue.AppendLine(killString);
