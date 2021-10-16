@@ -23,12 +23,12 @@ namespace KillLogs
 
             _killString.Clear();
 
-            _killString.Append($"{DateTime.Now} ");
-            _killString.Append($"[{ev.Killer.Role}] {ev.Killer.Nickname} (`{ev.Killer.UserId}`) killed ");
-            _killString.Append($"[{ev.Target.Role}] {ev.Target.Nickname} (`{ev.Target.UserId}`) ");
+            _killString.Append($"`{DateTime.Now}` ");
+            _killString.Append($"**[{ev.Killer.Role}] {ev.Killer.Nickname} (`{ev.Killer.UserId}`)** killed ");
+            _killString.Append($"**[{ev.Target.Role}] {ev.Target.Nickname} (`{ev.Target.UserId}`)** ");
             _killString.Append(GetSpecialDecoration(reason));
+            _killString.Append($" [ZONE: {ev.Target.Zone}] ");
             _killString.Append(GetMention(reason));
-            _killString.Append($"** [ZONE: {ev.Target.Zone}]**");
 
             Log.Debug(_killString, plugin.Config.Debug);
 
