@@ -1,5 +1,6 @@
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using Respawning;
 
 namespace KillLogs
 {
@@ -58,6 +59,21 @@ namespace KillLogs
         {
             plugin.KillWebhook.SendMessage("**=== ROUND STARTED ===**")
                 .Queue(() => Log.Debug("Sent round started message", plugin.Config.Debug));
+        }
+
+        public void OnRespawningTeam(RespawningTeamEventArgs ev)
+        {
+            switch (ev.NextKnownTeam)
+            {
+                case SpawnableTeamType.ChaosInsurgency:
+                    plugin.KillWebhook.SendMessage("**=== CI SPAWNED ===**")
+                        .Queue(() => Log.Debug("Sent CI spawn message", plugin.Config.Debug));
+                    break;
+                case SpawnableTeamType.NineTailedFox:
+                    plugin.KillWebhook.SendMessage("**=== NTF SPAWNED ===**")
+                        .Queue(() => Log.Debug("Sent NTF spawn message", plugin.Config.Debug));
+                    break;
+            }
         }
     }
 }

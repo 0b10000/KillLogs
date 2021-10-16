@@ -28,6 +28,7 @@ namespace KillLogs
             _killString.Append($"[{ev.Target.Role}] {ev.Target.Nickname} (`{ev.Target.UserId}`) ");
             _killString.Append(GetSpecialDecoration(reason));
             _killString.Append(GetMention(reason));
+            _killString.Append($"** [ZONE: {ev.Target.Zone}]**");
 
             Log.Debug(_killString, plugin.Config.Debug);
 

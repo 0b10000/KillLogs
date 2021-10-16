@@ -41,6 +41,7 @@ namespace KillLogs
 
             ServerEvents.RoundEnded += EventHandlers.OnRoundEnded;
             ServerEvents.RoundStarted += EventHandlers.OnRoundStarted;
+            ServerEvents.RespawningTeam += EventHandlers.OnRespawningTeam;
 
             base.OnEnabled();
         }
@@ -51,6 +52,7 @@ namespace KillLogs
 
             ServerEvents.RoundEnded -= EventHandlers.OnRoundEnded;
             ServerEvents.RoundStarted -= EventHandlers.OnRoundStarted;
+            ServerEvents.RespawningTeam -= EventHandlers.OnRespawningTeam;
 
             KillWebhook = null;
             WebhookProvider = null;
