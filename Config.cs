@@ -21,6 +21,9 @@ namespace KillLogs
         [Description("Whether to log SCP kills or not.")]
         public bool LogScpKills { get; set; } = false;
 
+        [Description("Whether to log suicides or not.")]
+        public bool LogSuicides { get; set; } = false;
+
         [Description("Whether or not to ping when a human kills another cuffed human.")]
         public bool PingCuffedHumanKills { get; set; } = true;
 
