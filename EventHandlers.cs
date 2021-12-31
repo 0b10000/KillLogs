@@ -53,15 +53,14 @@ namespace KillLogs
 
         public void OnRoundEnded(RoundEndedEventArgs ev)
         {
-            plugin.LogManager.SendQueue();
-            plugin.KillWebhook.SendMessage("**=== ROUND ENDED ===**")
-                .Queue(() => Log.Debug("Sent round ended message", plugin.Config.Debug));
+            plugin.LogManager.EnqueueText("**=== ROUND ENDED ===**", true);
+            Log.Debug("Sent round ended message", plugin.Config.Debug);
         }
 
         public void OnRoundStarted()
         {
-            plugin.KillWebhook.SendMessage("**=== ROUND STARTED ===**")
-                .Queue(() => Log.Debug("Sent round started message", plugin.Config.Debug));
+            plugin.LogManager.EnqueueText("**=== ROUND STARTED ===**", true);
+            Log.Debug("Sent round started message", plugin.Config.Debug);
         }
 
         public void OnRespawningTeam(RespawningTeamEventArgs ev)

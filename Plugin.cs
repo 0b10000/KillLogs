@@ -21,7 +21,7 @@ namespace KillLogs
         public override Version Version { get; } = new(2, 0, 1);
         public override Version RequiredExiledVersion { get; } = new(4, 1, 5);
 
-        public EventHandlers EventHandlers { get; private set; }
+        private EventHandlers EventHandlers { get; set; }
 
         public LogManager LogManager { get; private set; }
 

@@ -35,7 +35,7 @@ namespace KillLogs
             EnqueueText(_killString.ToString(), sendImmediately);
         }
 
-        public void SendQueue()
+        private void SendQueue()
         {
             plugin.KillWebhook.SendMessage(_queue.ToString())
                 .Queue(() => Log.Debug($"Sent queue of length {_queue.Length}", plugin.Config.Debug));
