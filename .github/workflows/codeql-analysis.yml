@@ -75,7 +75,7 @@ jobs:
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
     - name: Build
-      run: msbuild KillLogs.sln -p:Configuration=release
+      run: msbuild KillLogs.sln -p:Configuration=release -p:UseSharedCompilation=false 
       env:
         EXILED_REFERENCES: ${{ github.workspace }}\lib
     
