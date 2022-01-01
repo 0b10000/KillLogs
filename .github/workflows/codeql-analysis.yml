@@ -23,7 +23,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
       actions: read
       contents: read
@@ -39,12 +39,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      
-    - name: Download references
-      uses: schmiddim/action-wget-unzip@v2
-      with:
-        url: 'https://www.exiled.host/build_deps/Dev.zip'
-        destination: lib
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -56,23 +50,35 @@ jobs:
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
+    - name: Setup Nuget
+      uses: iRebbok/setup-nuget@master
+    
+    - name: Restore Packages
+      run: nuget restore KillLogs.sln
+      
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Download references
+      uses: carlosperate/download-file-action@v1.0.3
+      with:
+        file-url: 'https://www.exiled.host/build_deps/Dev.zip'
+        file-name: 'References.zip'
+
+    - name: Download 7zip
+      uses: carlosperate/download-file-action@v1.0.3
+      with:
+        file-url: 'https://www.exiled.host/7za.exe'
+        file-name: '7zip.exe'
+
+    - name: Extract Refs
+      run: ./7zip.exe e References.zip -o${{ github.workspace }}\lib\ -r -y
+
+    - name: Build
+      run: msbuild KillLogs.sln -p:Configuration=release
       env:
         EXILED_REFERENCES: ${{ github.workspace }}\lib
-
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 https://git.io/JvXDl
-
-    # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
-    #    and modify them (or add more) to build your code if your project
-    #    uses a compiled language
-
-    #- run: |
-    #   make bootstrap
-    #   make release
+    
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
