@@ -44,7 +44,7 @@ jobs:
       uses: schmiddim/action-wget-unzip@v2
       with:
         url: 'https://www.exiled.host/build_deps/Dev.zip'
-        destination: ${{ github.workspace }}/lib/
+        destination: lib
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
