@@ -39,6 +39,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      
+    - name: Download references
+      uses: schmiddim/action-wget-unzip@v2
+      with:
+        url: 'https://www.exiled.host/build_deps/Dev.zip'
+        destination: ${{ github.workspace }}/lib/
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -54,6 +60,8 @@ jobs:
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1
+      env:
+        EXILED_REFERENCES: ${{ github.workspace }}\lib
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
