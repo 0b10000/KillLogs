@@ -25,3 +25,8 @@ KillLogs:
   ping_teamkills: true
   debug: false
  ```
+ 
+ # Installation
+ * Upload the KillLogs.dll file from the [Releases](https://github.com/0b10000/KillLogs/releases) page into your EXILED plugins directory.
+ * Upload the dependencies.zip file to the plugins/dependencies folder and unzip the contents.
+ * Restart your server or reload plugins and configure the plugin. 
