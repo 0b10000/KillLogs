@@ -15,6 +15,6 @@ namespace KillLogs
         /// <summary>
         ///     Used when any kill other than a TK/cuffed kill happens.
         /// </summary>
-        RegularLogging
+        Regular
     }
 }

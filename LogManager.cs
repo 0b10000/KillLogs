@@ -23,12 +23,8 @@ namespace KillLogs
 
             _killString.Clear();
 
-            _killString.Append($"`{DateTime.Now}` ");
-            _killString.Append($"**[{ev.Killer.Role}] {ev.Killer.Nickname} (`{ev.Killer.UserId}`)** killed ");
-            _killString.Append($"**[{ev.Target.Role}] {ev.Target.Nickname} (`{ev.Target.UserId}`)** ");
-            _killString.Append(GetSpecialDecoration(reason));
-            _killString.Append($" [ZONE: {ev.Target.Zone}] ");
-            _killString.Append(GetMention(reason));
+            _killString.Append(
+                $"<t:{DateTime.Now.Second}:F> **[{ev.Killer.Role}] {ev.Killer.Nickname} (`{ev.Killer.UserId}`)** killed **[{ev.Target.Role}] {ev.Target.Nickname} (`{ev.Target.UserId}`)** {GetSpecialDecoration(reason)} [ZONE: {ev.Target.Zone}] {GetMention(reason)}");
 
             Log.Debug(_killString, plugin.Config.Debug);
 
@@ -45,7 +41,7 @@ namespace KillLogs
 
         internal void EnqueueText(string killString, bool sendImmediately = false)
         {
-            if (killString.Length + _queue.Length >= plugin.Config.QueueLength) SendQueue();
+            if ((killString.Length + _queue.Length >= plugin.Config.QueueLength) || _queue.Length >= 1900) SendQueue();
             _queue.AppendLine(killString);
             if (sendImmediately) SendQueue();
             Log.Debug("Enqueued kill", plugin.Config.Debug);
@@ -53,28 +49,22 @@ namespace KillLogs
 
         private string GetMention(LogReason reason)
         {
-            switch (reason)
+            return reason switch
             {
-                case LogReason.CuffedKill when plugin.Config.PingCuffedHumanKills:
-                    return $"<@&{plugin.Config.RoleIdToPing}>";
-                case LogReason.TeamKill when plugin.Config.PingTeamkills:
-                    return $"<@&{plugin.Config.RoleIdToPing}>";
-                default:
-                    return null;
-            }
+                LogReason.CuffedKill when plugin.Config.PingCuffedHumanKills => $"<@&{plugin.Config.RoleIdToPing}>",
+                LogReason.TeamKill when plugin.Config.PingTeamkills => $"<@&{plugin.Config.RoleIdToPing}>",
+                _ => null
+            };
         }
 
         private string GetSpecialDecoration(LogReason reason)
         {
-            switch (reason)
+            return reason switch
             {
-                case LogReason.CuffedKill:
-                    return "**(CUFFED)**";
-                case LogReason.TeamKill:
-                    return "**(TEAMKILL)**";
-                default:
-                    return null;
-            }
+                LogReason.CuffedKill => "**(CUFFED)**",
+                LogReason.TeamKill => "**(TEAMKILL)**",
+                _ => null
+            };
         }
     }
 }

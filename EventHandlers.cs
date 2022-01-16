@@ -1,3 +1,4 @@
+using System;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using Respawning;
@@ -28,7 +29,7 @@ namespace KillLogs
                 if (plugin.Config.LogSuicides)
                 {
                     Log.Debug("Suicide", plugin.Config.Debug);
-                    plugin.LogManager.ReportKill(ev, LogReason.RegularLogging);
+                    plugin.LogManager.ReportKill(ev, LogReason.Regular);
                 }
                 return;
             }
@@ -48,7 +49,7 @@ namespace KillLogs
             }
 
             Log.Debug("Regular kill", plugin.Config.Debug);
-            plugin.LogManager.ReportKill(ev, LogReason.RegularLogging);
+            plugin.LogManager.ReportKill(ev, LogReason.Regular);
         }
 
         public void OnRoundEnded(RoundEndedEventArgs ev)
@@ -73,6 +74,10 @@ namespace KillLogs
                 case SpawnableTeamType.NineTailedFox:
                     plugin.LogManager.EnqueueText("**=== NTF SPAWNED ===**",true);
                     break;
+                case SpawnableTeamType.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
