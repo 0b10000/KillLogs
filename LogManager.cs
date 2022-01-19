@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using KillLogs.Enums;
 
 namespace KillLogs
 {
@@ -29,6 +30,22 @@ namespace KillLogs
             Log.Debug(_killString, plugin.Config.Debug);
 
             EnqueueText(_killString.ToString(), sendImmediately);
+
+            switch (reason)
+            {
+                case LogReason.CuffedKill when plugin.Config.NotifyCuffedHumanKills:
+                    plugin.Methods.SendHintToNotifiablePlayers(
+                        $"<color=red>{ev.Killer.Nickname} has killed {ev.Target.Nickname} while cuffed!</color>");
+                    break;
+                case LogReason.TeamKill when plugin.Config.NotifyTeamKills:
+                    plugin.Methods.SendHintToNotifiablePlayers(
+                        $"<color=red>{ev.Killer.Nickname} has teamkilled {ev.Target.Nickname}!</color>");
+                    break;
+                case LogReason.Regular:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(reason), reason, null);
+            }
         }
 
         private void SendQueue()
@@ -41,7 +58,7 @@ namespace KillLogs
 
         internal void EnqueueText(string killString, bool sendImmediately = false)
         {
-            if ((killString.Length + _queue.Length >= plugin.Config.QueueLength) || _queue.Length >= 1900) SendQueue();
+            if (killString.Length + _queue.Length >= plugin.Config.QueueLength || _queue.Length >= 1900) SendQueue();
             _queue.AppendLine(killString);
             if (sendImmediately) SendQueue();
             Log.Debug("Enqueued kill", plugin.Config.Debug);

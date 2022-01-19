@@ -1,4 +1,4 @@
-namespace KillLogs
+namespace KillLogs.Enums
 {
     public enum LogReason
     {

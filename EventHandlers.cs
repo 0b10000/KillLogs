@@ -1,6 +1,9 @@
 using System;
+using System.Linq;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using Exiled.Permissions.Extensions;
+using KillLogs.Enums;
 using Respawning;
 
 namespace KillLogs
@@ -60,8 +63,22 @@ namespace KillLogs
         {
             plugin.LogManager.EnqueueText("**=== ROUND STARTED ===**", true);
             Log.Debug("Sent round started message", plugin.Config.Debug);
+            
+            plugin.PlayersToNotify.Clear();
+            plugin.PlayersToNotify = Player.List.Where(player => player.CheckPermission("kill_logs.notify")).ToList();
         }
 
+        public void OnVerified(VerifiedEventArgs ev)
+        {
+            if (ev.Player.CheckPermission("kill_logs.notify") && !plugin.PlayersToNotify.Contains(ev.Player))
+                plugin.PlayersToNotify.Add(ev.Player);
+        }
+        
+        public void OnLeft(LeftEventArgs ev)
+        {
+            plugin.PlayersToNotify.Remove(ev.Player);
+        }
+        
         public void OnRespawningTeam(RespawningTeamEventArgs ev)
         {
             switch (ev.NextKnownTeam)

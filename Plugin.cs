@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using DSharp4Webhook.Core;
 using Exiled.API.Features;
+using Exiled.Events.Extensions;
 using MapEvents = Exiled.Events.Handlers.Map;
 using PlayerEvents = Exiled.Events.Handlers.Player;
 using Scp049Events = Exiled.Events.Handlers.Scp049;
@@ -22,15 +24,19 @@ namespace KillLogs
         public override Version RequiredExiledVersion { get; } = new(5, 0, 0);
 
         private EventHandlers EventHandlers { get; set; }
+        internal Methods Methods { get; set; }
 
         public LogManager LogManager { get; private set; }
 
         private WebhookProvider WebhookProvider { get; set; }
         internal IWebhook KillWebhook { get; set; }
+        
+        internal List<Player> PlayersToNotify { get; set; }
 
         public override void OnEnabled()
         {
             EventHandlers = new EventHandlers(this);
+            Methods = new Methods(this);
             LogManager = new LogManager(this);
 
             WebhookProvider = new WebhookProvider("0b10000.kill_logs");
@@ -38,6 +44,8 @@ namespace KillLogs
             KillWebhook = WebhookProvider.CreateWebhook(Config.DiscordWebhookUrl);
 
             PlayerEvents.Dying += EventHandlers.OnDying;
+            PlayerEvents.Verified += EventHandlers.OnVerified;
+            PlayerEvents.Left += EventHandlers.OnLeft;
 
             ServerEvents.RoundEnded += EventHandlers.OnRoundEnded;
             ServerEvents.RoundStarted += EventHandlers.OnRoundStarted;
@@ -49,6 +57,8 @@ namespace KillLogs
         public override void OnDisabled()
         {
             PlayerEvents.Dying -= EventHandlers.OnDying;
+            PlayerEvents.Verified -= EventHandlers.OnVerified;
+            PlayerEvents.Left -= EventHandlers.OnLeft;
 
             ServerEvents.RoundEnded -= EventHandlers.OnRoundEnded;
             ServerEvents.RoundStarted -= EventHandlers.OnRoundStarted;
@@ -57,6 +67,7 @@ namespace KillLogs
             KillWebhook = null;
             WebhookProvider = null;
             EventHandlers = null;
+            Methods = null;
             LogManager = null;
 
             base.OnDisabled();
