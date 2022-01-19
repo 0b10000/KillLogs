@@ -26,11 +26,9 @@ namespace KillLogs
 
             if (ev.Killer == ev.Target)
             {
-                if (plugin.Config.LogSuicides)
-                {
-                    Log.Debug("Suicide", plugin.Config.Debug);
-                    plugin.LogManager.ReportKill(ev, LogReason.Regular);
-                }
+                if (!plugin.Config.LogSuicides) return;
+                Log.Debug("Suicide", plugin.Config.Debug);
+                plugin.LogManager.ReportKill(ev, LogReason.Regular);
                 return;
             }
 
