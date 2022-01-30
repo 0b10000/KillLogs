@@ -1,5 +1,6 @@
 # KillLogs
 ![GitHub release (latest by SemVer)](https://img.shields.io/github/downloads/0b10000/KillLogs/latest/total?sort=semver)
+![GitHub all releases](https://img.shields.io/github/downloads/0b10000/KillLogs/total)
 
 
 A plugin for EXILED that logs kills into a Discord channel using webhooks.
