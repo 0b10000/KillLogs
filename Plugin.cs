@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using DSharp4Webhook.Core;
 using Exiled.API.Features;
-using Exiled.Events.Extensions;
 using MapEvents = Exiled.Events.Handlers.Map;
 using PlayerEvents = Exiled.Events.Handlers.Player;
 using Scp049Events = Exiled.Events.Handlers.Scp049;
@@ -39,6 +38,8 @@ namespace KillLogs
             Methods = new Methods(this);
             LogManager = new LogManager(this);
 
+            PlayersToNotify = new List<Player>();
+
             WebhookProvider = new WebhookProvider("0b10000.kill_logs");
             WebhookProvider.AllowedMention = AllowedMention.ROLES;
             KillWebhook = WebhookProvider.CreateWebhook(Config.DiscordWebhookUrl);
@@ -69,6 +70,7 @@ namespace KillLogs
             EventHandlers = null;
             Methods = null;
             LogManager = null;
+            PlayersToNotify = null;
 
             base.OnDisabled();
         }
