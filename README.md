@@ -24,6 +24,14 @@ KillLogs:
   ping_cuffed_human_kills: true
   # Whether or not to ping when a teamkill happens.
   ping_teamkills: true
+  # Whether or not to ping when a teamkill happens.
+  ping_teamkills: false
+  # Whether or not to notify online players with the kill_logs.notify permission when a human kills another cuffed human.
+  notify_cuffed_human_kills: true
+  # Whether or not to notify online players with the kill_logs.notify permission when a teamkill happens.
+  notify_team_kills: true
+  # Duration (in seconds) of how long the kill notification should last.
+  notify_hint_duration: 10
   debug: false
  ```
  
