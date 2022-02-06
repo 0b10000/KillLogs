@@ -58,9 +58,10 @@ namespace KillLogs
 
         internal void EnqueueText(string killString, bool sendImmediately = false)
         {
+            if (sendImmediately) SendQueue();
             if (killString.Length + _queue.Length >= plugin.Config.QueueLength || _queue.Length >= 1900) SendQueue();
             _queue.AppendLine(killString);
-            if (sendImmediately) SendQueue();
+            if (sendImmediately) SendQueue(); // second time so the message is highlighted only
             Log.Debug("Enqueued kill", plugin.Config.Debug);
         }
 

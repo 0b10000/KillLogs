@@ -38,14 +38,14 @@ namespace KillLogs
             if (ev.Killer.Team == ev.Target.Team)
             {
                 Log.Debug("**TEAMKILL**", plugin.Config.Debug);
-                plugin.LogManager.ReportKill(ev, LogReason.TeamKill, true);
+                plugin.LogManager.ReportKill(ev, LogReason.TeamKill, plugin.Config.PingTeamkills);
                 return;
             }
 
             if (!ev.Killer.IsScp && ev.Target.IsCuffed)
             {
                 Log.Debug("**CUFFED**", plugin.Config.Debug);
-                plugin.LogManager.ReportKill(ev, LogReason.CuffedKill, true);
+                plugin.LogManager.ReportKill(ev, LogReason.CuffedKill, plugin.Config.PingCuffedHumanKills);
                 return;
             }
 
