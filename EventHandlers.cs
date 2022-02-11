@@ -35,7 +35,7 @@ namespace KillLogs
                 return;
             }
 
-            if (ev.Killer.Team == ev.Target.Team)
+            if (ev.Killer.Role.Team == ev.Target.Role.Team)
             {
                 Log.Debug("**TEAMKILL**", plugin.Config.Debug);
                 plugin.LogManager.ReportKill(ev, LogReason.TeamKill, plugin.Config.PingTeamkills);
