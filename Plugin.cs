@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DSharp4Webhook.Core;
 using Exiled.API.Features;
 using MapEvents = Exiled.Events.Handlers.Map;
@@ -18,26 +19,34 @@ namespace KillLogs
         public override string Author => "0b10000";
         public override string Name => "KillLogs";
         public override string Prefix => "KillLogs";
-        public override Version Version { get; } = new(2, 0, 2);
-        public override Version RequiredExiledVersion { get; } = new(4, 1, 7);
+        public override Version Version { get; } = new(3, 0, 0);
+        public override Version RequiredExiledVersion { get; } = new(5, 0, 0);
 
         private EventHandlers EventHandlers { get; set; }
+        internal Methods Methods { get; set; }
 
         public LogManager LogManager { get; private set; }
 
         private WebhookProvider WebhookProvider { get; set; }
         internal IWebhook KillWebhook { get; set; }
+        
+        internal List<Player> PlayersToNotify { get; set; }
 
         public override void OnEnabled()
         {
             EventHandlers = new EventHandlers(this);
+            Methods = new Methods(this);
             LogManager = new LogManager(this);
+
+            PlayersToNotify = new List<Player>();
 
             WebhookProvider = new WebhookProvider("0b10000.kill_logs");
             WebhookProvider.AllowedMention = AllowedMention.ROLES;
             KillWebhook = WebhookProvider.CreateWebhook(Config.DiscordWebhookUrl);
 
             PlayerEvents.Dying += EventHandlers.OnDying;
+            PlayerEvents.Verified += EventHandlers.OnVerified;
+            PlayerEvents.Left += EventHandlers.OnLeft;
 
             ServerEvents.RoundEnded += EventHandlers.OnRoundEnded;
             ServerEvents.RoundStarted += EventHandlers.OnRoundStarted;
@@ -49,6 +58,8 @@ namespace KillLogs
         public override void OnDisabled()
         {
             PlayerEvents.Dying -= EventHandlers.OnDying;
+            PlayerEvents.Verified -= EventHandlers.OnVerified;
+            PlayerEvents.Left -= EventHandlers.OnLeft;
 
             ServerEvents.RoundEnded -= EventHandlers.OnRoundEnded;
             ServerEvents.RoundStarted -= EventHandlers.OnRoundStarted;
@@ -57,7 +68,9 @@ namespace KillLogs
             KillWebhook = null;
             WebhookProvider = null;
             EventHandlers = null;
+            Methods = null;
             LogManager = null;
+            PlayersToNotify = null;
 
             base.OnDisabled();
         }

@@ -1,4 +1,4 @@
-namespace KillLogs
+namespace KillLogs.Enums
 {
     public enum LogReason
     {
@@ -15,6 +15,6 @@ namespace KillLogs
         /// <summary>
         ///     Used when any kill other than a TK/cuffed kill happens.
         /// </summary>
-        RegularLogging
+        Regular
     }
 }

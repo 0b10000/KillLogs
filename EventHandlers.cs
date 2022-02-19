@@ -1,5 +1,9 @@
+using System;
+using System.Linq;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using Exiled.Permissions.Extensions;
+using KillLogs.Enums;
 using Respawning;
 
 namespace KillLogs
@@ -25,30 +29,28 @@ namespace KillLogs
 
             if (ev.Killer == ev.Target)
             {
-                if (plugin.Config.LogSuicides)
-                {
-                    Log.Debug("Suicide", plugin.Config.Debug);
-                    plugin.LogManager.ReportKill(ev, LogReason.RegularLogging);
-                }
+                if (!plugin.Config.LogSuicides) return;
+                Log.Debug("Suicide", plugin.Config.Debug);
+                plugin.LogManager.ReportKill(ev, LogReason.Regular);
                 return;
             }
 
-            if (ev.Killer.Team == ev.Target.Team)
+            if (ev.Killer.Role.Team == ev.Target.Role.Team)
             {
                 Log.Debug("**TEAMKILL**", plugin.Config.Debug);
-                plugin.LogManager.ReportKill(ev, LogReason.TeamKill, true);
+                plugin.LogManager.ReportKill(ev, LogReason.TeamKill, plugin.Config.PingTeamkills);
                 return;
             }
 
             if (!ev.Killer.IsScp && ev.Target.IsCuffed)
             {
                 Log.Debug("**CUFFED**", plugin.Config.Debug);
-                plugin.LogManager.ReportKill(ev, LogReason.CuffedKill, true);
+                plugin.LogManager.ReportKill(ev, LogReason.CuffedKill, plugin.Config.PingCuffedHumanKills);
                 return;
             }
 
             Log.Debug("Regular kill", plugin.Config.Debug);
-            plugin.LogManager.ReportKill(ev, LogReason.RegularLogging);
+            plugin.LogManager.ReportKill(ev, LogReason.Regular);
         }
 
         public void OnRoundEnded(RoundEndedEventArgs ev)
@@ -61,8 +63,22 @@ namespace KillLogs
         {
             plugin.LogManager.EnqueueText("**=== ROUND STARTED ===**", true);
             Log.Debug("Sent round started message", plugin.Config.Debug);
+            
+            plugin.PlayersToNotify.Clear();
+            plugin.PlayersToNotify = Player.List.Where(player => player.CheckPermission("kill_logs.notify")).ToList();
         }
 
+        public void OnVerified(VerifiedEventArgs ev)
+        {
+            if (ev.Player.CheckPermission("kill_logs.notify") && !plugin.PlayersToNotify.Contains(ev.Player))
+                plugin.PlayersToNotify.Add(ev.Player);
+        }
+        
+        public void OnLeft(LeftEventArgs ev)
+        {
+            plugin.PlayersToNotify.Remove(ev.Player);
+        }
+        
         public void OnRespawningTeam(RespawningTeamEventArgs ev)
         {
             switch (ev.NextKnownTeam)
@@ -73,6 +89,10 @@ namespace KillLogs
                 case SpawnableTeamType.NineTailedFox:
                     plugin.LogManager.EnqueueText("**=== NTF SPAWNED ===**",true);
                     break;
+                case SpawnableTeamType.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

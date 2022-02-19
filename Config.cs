@@ -30,6 +30,15 @@ namespace KillLogs
         [Description("Whether or not to ping when a teamkill happens.")]
         public bool PingTeamkills { get; set; } = true;
 
+        [Description("Whether or not to notify online players with the kill_logs.notify permission when a human kills another cuffed human.")]
+        public bool NotifyCuffedHumanKills { get; set; } = true;
+        
+        [Description("Whether or not to notify online players with the kill_logs.notify permission when a teamkill happens.")]
+        public bool NotifyTeamKills { get; set; } = true;
+        
+        [Description("Duration (in seconds) of how long the kill notification should last.")]
+        public float NotifyHintDuration { get; set; } = 10;
+
         public bool Debug { get; set; } = false;
         
     }

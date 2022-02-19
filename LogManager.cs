@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using KillLogs.Enums;
 
 namespace KillLogs
 {
@@ -23,16 +24,28 @@ namespace KillLogs
 
             _killString.Clear();
 
-            _killString.Append($"`{DateTime.Now}` ");
-            _killString.Append($"**[{ev.Killer.Role}] {ev.Killer.Nickname} (`{ev.Killer.UserId}`)** killed ");
-            _killString.Append($"**[{ev.Target.Role}] {ev.Target.Nickname} (`{ev.Target.UserId}`)** ");
-            _killString.Append(GetSpecialDecoration(reason));
-            _killString.Append($" [ZONE: {ev.Target.Zone}] ");
-            _killString.Append(GetMention(reason));
+            _killString.Append(
+                $"<t:{DateTimeOffset.Now.ToUnixTimeSeconds()}> **[{ev.Killer.Role}] {ev.Killer.Nickname} (`{ev.Killer.UserId}`)** killed **[{ev.Target.Role}] {ev.Target.Nickname} (`{ev.Target.UserId}`)** {GetSpecialDecoration(reason)} [ZONE: {ev.Target.Zone}] {GetMention(reason)}");
 
             Log.Debug(_killString, plugin.Config.Debug);
 
             EnqueueText(_killString.ToString(), sendImmediately);
+
+            switch (reason)
+            {
+                case LogReason.CuffedKill when plugin.Config.NotifyCuffedHumanKills:
+                    plugin.Methods.SendHintToNotifiablePlayers(
+                        $"<color=red>{ev.Killer.Nickname} has killed {ev.Target.Nickname} while cuffed!</color>");
+                    break;
+                case LogReason.TeamKill when plugin.Config.NotifyTeamKills:
+                    plugin.Methods.SendHintToNotifiablePlayers(
+                        $"<color=red>{ev.Killer.Nickname} has teamkilled {ev.Target.Nickname}!</color>");
+                    break;
+                case LogReason.Regular:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(reason), reason, null);
+            }
         }
 
         private void SendQueue()
@@ -45,36 +58,31 @@ namespace KillLogs
 
         internal void EnqueueText(string killString, bool sendImmediately = false)
         {
-            if (killString.Length + _queue.Length >= plugin.Config.QueueLength) SendQueue();
-            _queue.AppendLine(killString);
             if (sendImmediately) SendQueue();
+            if (killString.Length + _queue.Length >= plugin.Config.QueueLength || _queue.Length >= 1900) SendQueue();
+            _queue.AppendLine(killString);
+            if (sendImmediately) SendQueue(); // second time so the message is highlighted only
             Log.Debug("Enqueued kill", plugin.Config.Debug);
         }
 
         private string GetMention(LogReason reason)
         {
-            switch (reason)
+            return reason switch
             {
-                case LogReason.CuffedKill when plugin.Config.PingCuffedHumanKills:
-                    return $"<@&{plugin.Config.RoleIdToPing}>";
-                case LogReason.TeamKill when plugin.Config.PingTeamkills:
-                    return $"<@&{plugin.Config.RoleIdToPing}>";
-                default:
-                    return null;
-            }
+                LogReason.CuffedKill when plugin.Config.PingCuffedHumanKills => $"<@&{plugin.Config.RoleIdToPing}>",
+                LogReason.TeamKill when plugin.Config.PingTeamkills => $"<@&{plugin.Config.RoleIdToPing}>",
+                _ => null
+            };
         }
 
         private string GetSpecialDecoration(LogReason reason)
         {
-            switch (reason)
+            return reason switch
             {
-                case LogReason.CuffedKill:
-                    return "**(CUFFED)**";
-                case LogReason.TeamKill:
-                    return "**(TEAMKILL)**";
-                default:
-                    return null;
-            }
+                LogReason.CuffedKill => "**(CUFFED)**",
+                LogReason.TeamKill => "**(TEAMKILL)**",
+                _ => null
+            };
         }
     }
 }
