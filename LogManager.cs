@@ -31,6 +31,7 @@ namespace KillLogs
 
             EnqueueText(_killString.ToString(), sendImmediately);
 
+            // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
             switch (reason)
             {
                 case LogReason.CuffedKill when plugin.Config.NotifyCuffedHumanKills:
@@ -41,10 +42,6 @@ namespace KillLogs
                     plugin.Methods.SendHintToNotifiablePlayers(
                         $"<color=red>{ev.Killer.Nickname} has teamkilled {ev.Target.Nickname}!</color>");
                     break;
-                case LogReason.Regular:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(reason), reason, null);
             }
         }
 
