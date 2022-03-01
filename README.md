@@ -1,6 +1,7 @@
 # KillLogs
 ![GitHub release (latest by SemVer)](https://img.shields.io/github/downloads/0b10000/KillLogs/latest/total?sort=semver)
 ![GitHub all releases](https://img.shields.io/github/downloads/0b10000/KillLogs/total)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2F0b10000%2FKillLogs.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2F0b10000%2FKillLogs?ref=badge_shield)
 
 
 A plugin for EXILED that logs kills into a Discord channel using webhooks.
@@ -39,3 +40,7 @@ KillLogs:
  * Upload the KillLogs.dll file from the [Releases](https://github.com/0b10000/KillLogs/releases) page into your EXILED plugins directory.
  * Upload the dependencies.zip file to the plugins/dependencies folder and unzip the contents.
  * Restart your server or reload plugins and configure the plugin. 
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2F0b10000%2FKillLogs.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2F0b10000%2FKillLogs?ref=badge_large)
