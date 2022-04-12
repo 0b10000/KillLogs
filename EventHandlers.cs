@@ -19,6 +19,7 @@ namespace KillLogs
 
         public void OnDying(DyingEventArgs ev)
         {
+            if (!Round.IsStarted) return;
             Log.Debug("Player died", plugin.Config.Debug);
             if (ev.Killer == null) return;
             if (ev.Target == null) return;
