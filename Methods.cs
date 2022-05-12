@@ -9,7 +9,7 @@ namespace KillLogs
         {
             foreach (var player in plugin.PlayersToNotify)
             {
-                player.ShowHint(message, 5f);
+                player.ShowHint(message, plugin.Config.NotifyHintDuration);
             }
         }
     }
