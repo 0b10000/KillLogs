@@ -20,7 +20,7 @@ namespace KillLogs
         public override string Name => "KillLogs";
         public override string Prefix => "KillLogs";
         public override Version Version { get; } = new(3, 1, 0);
-        public override Version RequiredExiledVersion { get; } = new(5, 0, 0);
+        public override Version RequiredExiledVersion { get; } = new(5, 2, 1);
 
         private EventHandlers EventHandlers { get; set; }
         internal Methods Methods { get; set; }
