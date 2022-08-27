@@ -25,7 +25,7 @@ namespace KillLogs
             _killString.Clear();
 
             _killString.Append(
-                $"<t:{DateTimeOffset.Now.ToUnixTimeSeconds()}> **[{ev.Killer.Role}] {ev.Killer.Nickname} (`{ev.Killer.UserId}`)** killed **[{ev.Target.Role}] {ev.Target.Nickname} (`{ev.Target.UserId}`)** {GetSpecialDecoration(reason)} [ZONE: {ev.Target.Zone}] {GetMention(reason)}");
+                $"<t:{DateTimeOffset.Now.ToUnixTimeSeconds()}> **[{ev.Killer.Role.Type}] {ev.Killer.Nickname} (`{ev.Killer.UserId}`)** killed **[{ev.Target.Role.Type}] {ev.Target.Nickname} (`{ev.Target.UserId}`)** {GetSpecialDecoration(reason)} [ZONE: {ev.Target.Zone}] {GetMention(reason)}");
 
             Log.Debug(_killString, plugin.Config.Debug);
 
