@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using Exiled.Events.EventArgs.Player;
 using KillLogs.Enums;
 
 namespace KillLogs
@@ -20,14 +21,14 @@ namespace KillLogs
 
         public void ReportKill(DyingEventArgs ev, LogReason reason, bool sendImmediately = false)
         {
-            Log.Debug("ReportKill", plugin.Config.Debug);
+            Log.Debug("ReportKill");
 
             _killString.Clear();
 
             _killString.Append(
-                $"<t:{DateTimeOffset.Now.ToUnixTimeSeconds()}> **[{ev.Killer.Role.Type}] {ev.Killer.Nickname} (`{ev.Killer.UserId}`)** killed **[{ev.Target.Role.Type}] {ev.Target.Nickname} (`{ev.Target.UserId}`)** {GetSpecialDecoration(reason)} [ZONE: {ev.Target.Zone}] {GetMention(reason)}");
+                $"<t:{DateTimeOffset.Now.ToUnixTimeSeconds()}> **[{ev.Attacker.Role.Type}] {ev.Attacker.Nickname} (`{ev.Attacker.UserId}`)** killed **[{ev.Player.Role.Type}] {ev.Player.Nickname} (`{ev.Player.UserId}`)** {GetSpecialDecoration(reason)} [ZONE: {ev.Player.Zone}] {GetMention(reason)}");
 
-            Log.Debug(_killString, plugin.Config.Debug);
+            Log.Debug(_killString);
 
             EnqueueText(_killString.ToString(), sendImmediately);
 
@@ -36,11 +37,11 @@ namespace KillLogs
             {
                 case LogReason.CuffedKill when plugin.Config.NotifyCuffedHumanKills:
                     plugin.Methods.SendHintToNotifiablePlayers(
-                        $"<color=red>{ev.Killer.Nickname} has killed {ev.Target.Nickname} while cuffed!</color>");
+                        $"<color=red>{ev.Attacker.Nickname} has killed {ev.Player.Nickname} while cuffed!</color>");
                     break;
                 case LogReason.TeamKill when plugin.Config.NotifyTeamKills:
                     plugin.Methods.SendHintToNotifiablePlayers(
-                        $"<color=red>{ev.Killer.Nickname} has teamkilled {ev.Target.Nickname}!</color>");
+                        $"<color=red>{ev.Attacker.Nickname} has teamkilled {ev.Player.Nickname}!</color>");
                     break;
             }
         }
@@ -48,7 +49,7 @@ namespace KillLogs
         private void SendQueue()
         {
             plugin.KillWebhook.SendMessage(_queue.ToString())
-                .Queue(() => Log.Debug($"Sent queue of length {_queue.Length}", plugin.Config.Debug));
+                .Queue(() => Log.Debug($"Sent queue of length {_queue.Length}"));
 
             _queue.Clear();
         }
@@ -59,7 +60,7 @@ namespace KillLogs
             if (killString.Length + _queue.Length >= plugin.Config.QueueLength || _queue.Length >= 1900) SendQueue();
             _queue.AppendLine(killString);
             if (sendImmediately) SendQueue(); // second time so the message is highlighted only
-            Log.Debug("Enqueued kill", plugin.Config.Debug);
+            Log.Debug("Enqueued kill");
         }
 
         private string GetMention(LogReason reason)

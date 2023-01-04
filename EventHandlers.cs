@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using Exiled.Events.EventArgs.Player;
+using Exiled.Events.EventArgs.Server;
 using Exiled.Permissions.Extensions;
 using KillLogs.Enums;
 using Respawning;
@@ -20,50 +22,50 @@ namespace KillLogs
         public void OnDying(DyingEventArgs ev)
         {
             if (!Round.IsStarted) return;
-            Log.Debug("Player died", plugin.Config.Debug);
-            if (ev.Killer == null) return;
-            if (ev.Target == null) return;
-            Log.Debug("Not null target/victim", plugin.Config.Debug);
+            Log.Debug("Player died");
+            if (ev.Attacker == null) return;
+            if (ev.Player == null) return;
+            Log.Debug("Not null target/victim");
 
-            if (ev.Killer.IsScp && !plugin.Config.LogScpKills) return;
-            Log.Debug("Not SCP", plugin.Config.Debug);
+            if (ev.Attacker.IsScp && !plugin.Config.LogScpKills) return;
+            Log.Debug("Not SCP");
 
-            if (ev.Killer == ev.Target)
+            if (ev.Attacker == ev.Player)
             {
                 if (!plugin.Config.LogSuicides) return;
-                Log.Debug("Suicide", plugin.Config.Debug);
+                Log.Debug("Suicide");
                 plugin.LogManager.ReportKill(ev, LogReason.Regular);
                 return;
             }
 
-            if (ev.Killer.Role.Team == ev.Target.Role.Team)
+            if (ev.Attacker.Role.Team == ev.Player.Role.Team)
             {
-                Log.Debug("**TEAMKILL**", plugin.Config.Debug);
+                Log.Debug("**TEAMKILL**");
                 plugin.LogManager.ReportKill(ev, LogReason.TeamKill, plugin.Config.PingTeamkills);
                 return;
             }
 
-            if (!ev.Killer.IsScp && ev.Target.IsCuffed)
+            if (!ev.Attacker.IsScp && ev.Player.IsCuffed)
             {
-                Log.Debug("**CUFFED**", plugin.Config.Debug);
+                Log.Debug("**CUFFED**");
                 plugin.LogManager.ReportKill(ev, LogReason.CuffedKill, plugin.Config.PingCuffedHumanKills);
                 return;
             }
 
-            Log.Debug("Regular kill", plugin.Config.Debug);
+            Log.Debug("Regular kill");
             plugin.LogManager.ReportKill(ev, LogReason.Regular);
         }
 
         public void OnRoundEnded(RoundEndedEventArgs ev)
         {
             plugin.LogManager.EnqueueText("**=== ROUND ENDED ===**", true);
-            Log.Debug("Sent round ended message", plugin.Config.Debug);
+            Log.Debug("Sent round ended message");
         }
 
         public void OnRoundStarted()
         {
             plugin.LogManager.EnqueueText("**=== ROUND STARTED ===**", true);
-            Log.Debug("Sent round started message", plugin.Config.Debug);
+            Log.Debug("Sent round started message");
             
             plugin.PlayersToNotify.Clear();
             plugin.PlayersToNotify = Player.List.Where(player => player.CheckPermission("kill_logs.notify")).ToList();
