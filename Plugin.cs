@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DSharp4Webhook.Core;
+using DSharp4Webhook.Core.Constructor;
 using Exiled.API.Features;
 using MapEvents = Exiled.Events.Handlers.Map;
 using PlayerEvents = Exiled.Events.Handlers.Player;
@@ -19,7 +20,7 @@ namespace KillLogs
         public override string Author => "0b10000";
         public override string Name => "KillLogs";
         public override string Prefix => "KillLogs";
-        public override Version Version { get; } = new(4, 0, 0);
+        public override Version Version { get; } = new(5, 0, 0);
         public override Version RequiredExiledVersion { get; } = new(6, 0, 0);
 
         private EventHandlers EventHandlers { get; set; }
@@ -29,6 +30,8 @@ namespace KillLogs
 
         private WebhookProvider WebhookProvider { get; set; }
         internal IWebhook KillWebhook { get; set; }
+        
+        internal MessageBuilder MessageBuilder { get; set; }
         
         internal List<Player> PlayersToNotify { get; set; }
 
@@ -42,6 +45,9 @@ namespace KillLogs
 
             WebhookProvider = new WebhookProvider("0b10000.kill_logs");
             WebhookProvider.AllowedMention = AllowedMention.ROLES;
+
+            MessageBuilder = ConstructorProvider.GetMessageBuilder();
+            
             KillWebhook = WebhookProvider.CreateWebhook(Config.DiscordWebhookUrl);
 
             PlayerEvents.Dying += EventHandlers.OnDying;

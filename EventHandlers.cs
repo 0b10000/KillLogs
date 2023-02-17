@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Exiled.API.Features;
-using Exiled.Events.EventArgs;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Server;
 using Exiled.Permissions.Extensions;

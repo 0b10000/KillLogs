@@ -39,6 +39,12 @@ namespace KillLogs
         [Description("Duration (in seconds) of how long the kill notification should last.")]
         public float NotifyHintDuration { get; set; } = 10;
 
+        [Description("The name to use for the webhook.")]
+        public string WebhookName { get; set; } = "Kill Logs";
+
+        [Description("The URL to use for the webhook avatar.")]
+        public string WebhookAvatarUrl { get; set; } = "https://via.placeholder.com/150.png";
+        
         public bool Debug { get; set; } = false;
         
     }

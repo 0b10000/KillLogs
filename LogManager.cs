@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using Exiled.API.Features;
-using Exiled.Events.EventArgs;
 using Exiled.Events.EventArgs.Player;
 using KillLogs.Enums;
 
@@ -48,7 +47,13 @@ namespace KillLogs
 
         private void SendQueue()
         {
-            plugin.KillWebhook.SendMessage(_queue.ToString())
+            plugin.MessageBuilder.Reset();
+            plugin.MessageBuilder.AvatarUrl = plugin.Config.WebhookAvatarUrl;
+            plugin.MessageBuilder.Username = plugin.Config.WebhookName;
+            plugin.MessageBuilder.Append(_queue.ToString());
+            var message = plugin.MessageBuilder.Build();
+            
+            plugin.KillWebhook.SendMessage(message)
                 .Queue(() => Log.Debug($"Sent queue of length {_queue.Length}"));
 
             _queue.Clear();
