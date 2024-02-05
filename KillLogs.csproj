@@ -54,8 +54,18 @@
         <Compile Include="LogManager.cs" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Costura.Fody" Version="5.8.0-alpha0098">
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="DSharp4Webhook" Version="2.0.1" />
-        <PackageReference Include="EXILED" Version="8.0.1" />
+        <PackageReference Include="EXILED" Version="8.7.3" />
+        <PackageReference Include="Fody" Version="6.8.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="FodyWeavers.xml" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -20,8 +20,8 @@ namespace KillLogs
         public override string Author => "0b10000";
         public override string Name => "KillLogs";
         public override string Prefix => "KillLogs";
-        public override Version Version { get; } = new(6, 0, 0);
-        public override Version RequiredExiledVersion { get; } = new(8, 0, 0);
+        public override Version Version { get; } = new(7, 0, 0);
+        public override Version RequiredExiledVersion { get; } = new(8, 7, 3);
 
         private EventHandlers EventHandlers { get; set; }
         internal Methods Methods { get; set; }
