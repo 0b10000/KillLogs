@@ -49,21 +49,12 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1
 
-    - name: Download references
-      uses: carlosperate/download-file-action@v1.0.3
-      with:
-        file-url: 'https://misaka-zerotwo.github.io/SL-References/Master.zip'
-        file-name: 'References.zip'
-
-    - name: Download 7zip
-      uses: carlosperate/download-file-action@v1.0.3
-      with:
-        file-url: 'https://www.exiled.host/7za.exe'
-        file-name: '7zip.exe'
-
-    - name: Extract Refs
-      run: ./7zip.exe e References.zip -o${{ github.workspace }}\lib\ -r -y
-
+    - name: Get references
+      shell: pwsh
+      run: |
+          Invoke-WebRequest -Uri https://misaka-zerotwo.github.io/SL-References/Master.zip -OutFile ${{ github.workspace }}/References.zip
+          Expand-Archive -Path References.zip -DestinationPath ${{ github.workspace }}\lib
+          
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
