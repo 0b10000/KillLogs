@@ -5,6 +5,7 @@ using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Server;
 using Exiled.Permissions.Extensions;
 using KillLogs.Enums;
+using PlayerRoles;
 using Respawning;
 
 namespace KillLogs
@@ -85,13 +86,17 @@ namespace KillLogs
         {
             switch (ev.NextKnownTeam)
             {
-                case SpawnableTeamType.ChaosInsurgency:
+                case Faction.FoundationEnemy:
                     plugin.LogManager.EnqueueText("**=== CI SPAWNED ===**", true);
                     break;
-                case SpawnableTeamType.NineTailedFox:
+                case Faction.FoundationStaff:
                     plugin.LogManager.EnqueueText("**=== NTF SPAWNED ===**",true);
                     break;
-                case SpawnableTeamType.None:
+                case Faction.Flamingos:
+                    plugin.LogManager.EnqueueText("**=== FLAMINGOS SPAWNED ===**",true);
+                    break;
+                case Faction.SCP:
+                case Faction.Unclassified:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
