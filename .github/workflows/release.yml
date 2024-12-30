@@ -20,7 +20,7 @@ jobs:
       run: nuget restore KillLogs.sln
       
     - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v2
 
     - name: Get references
       shell: pwsh
