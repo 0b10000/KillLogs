@@ -25,7 +25,7 @@ jobs:
     - name: Get references
       shell: pwsh
       run: |
-          Invoke-WebRequest -Uri https://exmod-team.github.io/SL-References/Dev.zip -OutFile ${{ github.workspace }}/References.zip
+          Invoke-WebRequest -Uri https://ExSLMod-Team.github.io/SL-References/Dev.zip -OutFile ${{ github.workspace }}/References.zip
           Expand-Archive -Path References.zip -DestinationPath ${{ github.workspace }}\lib
           
     - name: Build
