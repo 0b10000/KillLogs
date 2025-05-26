@@ -34,7 +34,7 @@ jobs:
         EXILED_REFERENCES: ${{ github.workspace }}\lib
         
     - name: Upload artifact and release
-      uses: nanoufo/action-upload-artifacts-and-release-assets@main
+      uses: nanoufo/action-upload-artifacts-and-release-assets@v2
       with:
         path: D:\a\KillLogs\KillLogs\bin\Release\KillLogs.dll
         upload-release-files: true
